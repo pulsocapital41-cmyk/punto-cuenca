@@ -127,6 +127,10 @@ const jsonLd = article
     <Footer />
 
     <script is:inline>
+      // Redirige automáticamente al panel /admin cuando un editor acepta su invitación por correo
+      if (window.location.hash && (window.location.hash.includes('invite_token=') || window.location.hash.includes('recovery_token='))) {
+        window.location.href = '/admin/' + window.location.hash;
+      }
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on('init', (user) => {
           if (!user) {

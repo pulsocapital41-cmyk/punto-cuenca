@@ -7,9 +7,24 @@ import { AI_NEWSROOM_SCRIPT } from '../utils/aiNewsroom';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
-    <title>Panel Editorial — Punto Cuenca</title>
+    <title>Sala de Redacción | Punto Cuenca</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
+    <style is:global>
+      /* Ocultar widgets y badges innecesarios de Netlify */
+      #nl-badge-frame,
+      #nl-hud-frame,
+      iframe[title="Powered by Netlify"],
+      iframe[title="Netlify"],
+      iframe[title*="Netlify"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        pointer-events: none !important;
+      }
+    </style>
     <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
   <body>
