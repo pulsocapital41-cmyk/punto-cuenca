@@ -1,30 +1,27 @@
 :root {
-  /* Paleta Editorial Punto Cuenca — Inspirada en la bandera y arquitectura de Cuenca (Azuay, Ecuador) */
-  --color-paper: #FAF8F5;
+  /* Paleta Digital Moderna Punto Cuenca — Azul Catedral (#07233E) y Dorado Sol (#C9A052) */
+  --color-paper: #F3F6FA;
   --color-surface: #FFFFFF;
-  --color-ink: #111622;
-  --color-ink-secondary: #3E4756;
-  --color-ink-muted: #697386;
+  --color-ink: #0B192C;
+  --color-ink-secondary: #475569;
+  --color-ink-muted: #64748B;
 
-  /* Acentos de marca extraídos del logo oficial de Punto Cuenca: Azul Cúpulas (#07233E) y Dorado Sol (#C9A052) */
   --color-brand-blue: #07233E;
-  --color-brand-blue-dark: #041628;
-  --color-brand-red: #B8862D;
-  --color-brand-red-light: #FBF7EE;
+  --color-brand-blue-dark: #041527;
   --color-brand-gold: #C9A052;
+  --color-brand-gold-soft: #FBF6EC;
+  --color-brand-red: #C9A052;
 
-  /* Reglas y bordes periodísticos */
-  --color-rule-heavy: #111622;
-  --color-rule-medium: #CBD2D9;
-  --color-rule-light: #E4E7EB;
+  --color-rule-heavy: #07233E;
+  --color-rule-medium: #CBD5E1;
+  --color-rule-light: #E2E8F0;
 
-  /* Tipografías */
-  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  --font-body: 'Source Serif 4', Georgia, serif;
+  /* Tipografía 100% Moderna Sans-Serif para diferenciarse totalmente de diarios clásicos */
+  --font-serif: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Layout */
-  --container-max: 1280px;
+  --container-max: 1320px;
 }
 
 *, *::before, *::after {
@@ -43,111 +40,58 @@ html {
 }
 
 body {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   line-height: 1.5;
 }
 
 img {
-  max-width: 100%;
-  height: auto;
+  max-inline-size: 100%;
+  block-size: auto;
   display: block;
 }
 
 a {
   color: inherit;
   text-decoration: none;
-  transition: color 0.18s ease;
+  transition: color 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
 }
 
 .container {
-  width: 100%;
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 1.25rem;
+  inline-size: 100%;
+  max-inline-size: var(--container-max);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
 }
 
 @media (min-width: 768px) {
   .container {
-    padding: 0 2rem;
+    padding-inline: 2rem;
   }
 }
 
-/* Etiquetas de categoría (Kickers) */
 .kicker {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
   font-family: var(--font-sans);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: var(--color-brand-red);
+  letter-spacing: 0.08em;
+  background-color: var(--color-brand-gold-soft);
+  color: var(--color-brand-blue);
+  border: 1px solid rgba(201, 160, 82, 0.45);
+  padding: 0.24rem 0.65rem;
+  border-radius: 999px;
 }
 
 .kicker::before {
   content: '';
   display: inline-block;
-  width: 6px;
-  height: 6px;
-  background-color: var(--color-brand-red);
+  inline-size: 6px;
+  block-size: 6px;
+  background-color: var(--color-brand-gold);
   border-radius: 50%;
-}
-
-.kicker--blue {
-  color: var(--color-brand-blue);
-}
-
-.kicker--blue::before {
-  background-color: var(--color-brand-blue);
-}
-
-/* Líneas divisorias de periódico */
-.editorial-divider {
-  border: 0;
-  border-top: 1px solid var(--color-rule-light);
-  margin: 2rem 0;
-}
-
-.section-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  border-top: 3px solid var(--color-brand-blue);
-  border-bottom: 1px solid var(--color-rule-light);
-  padding: 0.65rem 0;
-  margin-bottom: 1.5rem;
-}
-
-.section-header__title {
-  font-family: var(--font-serif);
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--color-ink);
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.section-header__title::before {
-  content: '';
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  background: var(--color-brand-red);
-}
-
-.section-header__link {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-brand-blue);
-}
-
-.section-header__link:hover {
-  color: var(--color-brand-red);
 }
