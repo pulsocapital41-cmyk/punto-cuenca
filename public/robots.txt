@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://puntocuenca.net/sitemap-index.xml

@@ -1,0 +1,19 @@
+---
+import { AI_NEWSROOM_SCRIPT } from '../utils/aiNewsroom';
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Panel Editorial — Punto Cuenca</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
+    <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  </head>
+  <body>
+    <script is:inline src="https://unpkg.com/decap-cms@^3.1.2/dist/decap-cms.js"></script>
+    <script is:inline set:html={AI_NEWSROOM_SCRIPT} />
+  </body>
+</html>

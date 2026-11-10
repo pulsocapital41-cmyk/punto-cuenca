@@ -1,0 +1,39 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Sitio en vivo
+site_url: https://puntocuenca.net
+display_url: https://puntocuenca.net
+locale: 'es'
+
+# Subida de imágenes local o Cloudinary CDN
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "noticias"
+    label: "📰 Noticias y Artículos"
+    label_singular: "Noticia"
+    folder: "src/content/noticias"
+    create: true
+    slug: "{{slug}}"
+    summary: "{{title}} — [{{category}}] ({{pubDate}})"
+    sortable_fields: ['pubDate', 'title', 'category', 'featured']
+    fields:
+      - { label: "Titular de la Noticia", name: "title", widget: "string", hint: "Titular principal periodístico y atractivo" }
+      - { label: "Subtítulo / Sumario (Bajada)", name: "subtitle", widget: "text", hint: "Resumen de 1 a 2 líneas que complementa el titular" }
+      - {
+          label: "Categoría / Sección",
+          name: "category",
+          widget: "select",
+          options: ["Capital", "Política", "Economía", "Sociedad", "Opinión"],
+          default: "Capital"
+        }
+      - { label: "Autor / Redacción", name: "author", widget: "string", default: "Redacción Punto Cuenca" }
+      - { label: "Fecha y Hora de Publicación", name: "pubDate", widget: "datetime", date_format: "YYYY-MM-DD", time_format: "HH:mm", format: "YYYY-MM-DDTHH:mm:ssZ" }
+      - { label: "Fotografía Principal", name: "image", widget: "image", hint: "Sube una foto desde tu computadora o celular" }
+      - { label: "Pie de Foto / Crédito", name: "imageCaption", widget: "string", required: false, hint: "Ej. Vista panorámica del Centro Histórico de Cuenca y las cúpulas de la Catedral Nueva. / Foto: Punto Cuenca" }
+      - { label: "⭐ Destacar en Portada Principal", name: "featured", widget: "boolean", default: false, required: false, hint: "Actívalo si quieres que esta sea la noticia principal de portada" }
+      - { label: "⏱️ Tiempo de Lectura", name: "readTime", widget: "string", default: "4 min", required: false }
+      - { label: "Cuerpo de la Noticia", name: "body", widget: "markdown", hint: "Escribe aquí el desarrollo completo del artículo. Puedes usar subtítulos, negritas, citas y listas." }

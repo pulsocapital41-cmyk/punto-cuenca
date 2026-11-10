@@ -1,0 +1,170 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { optimizeImage } from '../utils/cloudinary';
+
+interface Props {
+  article: CollectionEntry<'noticias'>;
+  variant?: 'default' | 'compact' | 'horizontal';
+}
+
+const { article, variant = 'default' } = Astro.props;
+const { title, subtitle, category, author, pubDate, image, readTime } = article.data;
+
+const formattedDate = pubDate.toLocaleDateString('es-EC', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+
+const categorySlug = category
+  .toLowerCase()
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, '');
+
+const displayCategory = category === 'Capital' ? 'Cuenca' : category;
+const optimizedImg = optimizeImage(image, variant === 'compact' ? 480 : 720);
+---
+
+<article class:list={['news-card', `news-card--${variant}`]}>
+  {variant !== 'compact' && (
+    <a href={`/noticias/${article.id}`} class="news-card__image-wrap">
+      <img src={optimizedImg} alt={title} loading="lazy" class="news-card__image" />
+    </a>
+  )}
+
+  <div class="news-card__body">
+    <div class="news-card__meta-top">
+      <a href={`/categoria/${categorySlug}`} class="kicker">
+        {displayCategory}
+      </a>
+      <span class="news-card__readtime">{readTime}</span>
+    </div>
+
+    <h3 class="news-card__title">
+      <a href={`/noticias/${article.id}`}>{title}</a>
+    </h3>
+
+    {variant !== 'compact' && (
+      <p class="news-card__subtitle">{subtitle}</p>
+    )}
+
+    <div class="news-card__byline">
+      <span class="news-card__author">{author}</span>
+      <span aria-hidden="true">·</span>
+      <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+    </div>
+  </div>
+</article>
+
+<style>
+  .news-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 100%;
+  }
+
+  .news-card__image-wrap {
+    display: block;
+    overflow: hidden;
+    border-radius: 4px;
+    background-color: #E4E7EB;
+    aspect-ratio: 16 / 10;
+  }
+
+  .news-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+  }
+
+  .news-card:hover .news-card__image {
+    transform: scale(1.03);
+  }
+
+  .news-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    flex: 1;
+  }
+
+  .news-card__meta-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .news-card__readtime {
+    font-size: 0.72rem;
+    color: var(--color-ink-muted);
+    font-weight: 600;
+  }
+
+  .news-card__title {
+    font-family: var(--font-serif);
+    font-size: 1.22rem;
+    font-weight: 700;
+    line-height: 1.26;
+    color: var(--color-ink);
+  }
+
+  .news-card__title a:hover {
+    color: var(--color-brand-blue);
+  }
+
+  .news-card__subtitle {
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    color: var(--color-ink-secondary);
+    line-height: 1.48;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .news-card__byline {
+    margin-top: auto;
+    padding-top: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--color-ink-muted);
+  }
+
+  .news-card__author {
+    font-weight: 600;
+    color: var(--color-ink-secondary);
+  }
+
+  /* Compact variant */
+  .news-card--compact {
+    padding-bottom: 0.95rem;
+    border-bottom: 1px solid var(--color-rule-light);
+  }
+
+  .news-card--compact .news-card__title {
+    font-size: 1.03rem;
+  }
+
+  /* Horizontal variant */
+  .news-card--horizontal {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .news-card--horizontal .news-card__image-wrap {
+    width: 130px;
+    flex-shrink: 0;
+    aspect-ratio: 4 / 3;
+  }
+
+  .news-card--horizontal .news-card__title {
+    font-size: 1.05rem;
+  }
+</style>

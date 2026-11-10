@@ -1,0 +1,590 @@
+---
+const today = new Date().toLocaleDateString('es-EC', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const categories = [
+  { name: 'Portada', href: '/' },
+  { name: 'Capital', href: '/categoria/capital', label: 'Cuenca' },
+  { name: 'Política', href: '/categoria/politica' },
+  { name: 'Economía', href: '/categoria/economia' },
+  { name: 'Sociedad', href: '/categoria/sociedad' },
+  { name: 'Opinión', href: '/categoria/opinion' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <!-- Barra superior informativa -->
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <div class="topbar__left">
+        <span class="live-badge">
+          <span class="live-dot"></span>
+          EN VIVO
+        </span>
+        <span class="topbar__date">{today}</span>
+      </div>
+      <div class="topbar__right">
+        <span class="topbar__edition">Edición Cuenca · Azuay · Austro Ecuatoriano</span>
+        <a href="#newsletter" class="topbar__subscribe">Boletín Matutino</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Masthead Principal con Logo -->
+  <div class="masthead">
+    <div class="container masthead__inner">
+      <div class="masthead__meta masthead__meta--left">
+        <span class="masthead__tag">Periodismo Independiente</span>
+        <p class="masthead__motto">Información verificada, análisis y contexto desde la Atenas del Ecuador.</p>
+      </div>
+
+      <a href="/" class="masthead__logo-link" aria-label="Punto Cuenca - Inicio">
+        <img
+          src="/logo-punto-cuenca.png"
+          alt="Punto Cuenca — La información en su punto"
+          class="masthead__logo"
+          width="240"
+          height="256"
+        />
+      </a>
+
+      <div class="masthead__meta masthead__meta--right">
+        <div class="weather-pill">
+          <span class="weather-pill__label">Río Tomebamba · Cuenca</span>
+          <span class="weather-pill__value">Actualización continua</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de Navegación de Secciones + Buscador -->
+  <nav class="nav-bar" aria-label="Secciones principales">
+    <div class="container nav-bar__inner">
+      <ul class="nav-list">
+        {categories.map((cat) => {
+          const isActive =
+            cat.href === '/'
+              ? currentPath === '/'
+              : currentPath.startsWith(cat.href);
+          return (
+            <li>
+              <a
+                href={cat.href}
+                class:list={['nav-link', { 'nav-link--active': isActive }]}
+              >
+                {cat.label || cat.name}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+
+      <button
+        type="button"
+        id="open-search-btn"
+        class="search-trigger"
+        aria-label="Buscar noticias"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>Buscar</span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- Modal Buscador Instantáneo -->
+<div id="search-modal" class="search-modal" aria-hidden="true">
+  <div class="search-modal__backdrop" id="close-search-backdrop"></div>
+  <div class="search-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="search-title">
+    <div class="search-modal__header">
+      <div class="search-input-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Buscar por titular, tema, autor o sección..."
+          autocomplete="off"
+        />
+      </div>
+      <button type="button" id="close-search-btn" class="search-modal__close" aria-label="Cerrar buscador">
+        ESC
+      </button>
+    </div>
+    <div id="search-results" class="search-modal__results">
+      <p class="search-modal__hint">Escribe al menos 2 letras para buscar en el archivo de Punto Cuenca.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const openBtn = document.getElementById('open-search-btn');
+  const closeBtn = document.getElementById('close-search-btn');
+  const backdrop = document.getElementById('close-search-backdrop');
+  const modal = document.getElementById('search-modal');
+  const input = document.getElementById('search-input') as HTMLInputElement | null;
+  const resultsContainer = document.getElementById('search-results');
+
+  let articlesCache: any[] | null = null;
+
+  async function loadSearchIndex() {
+    if (articlesCache) return articlesCache;
+    try {
+      const res = await fetch('/api/search.json');
+      articlesCache = await res.json();
+      return articlesCache;
+    } catch {
+      return [];
+    }
+  }
+
+  function openSearch() {
+    modal?.classList.add('is-open');
+    modal?.setAttribute('aria-hidden', 'false');
+    setTimeout(() => input?.focus(), 50);
+    loadSearchIndex();
+  }
+
+  function closeSearch() {
+    modal?.classList.remove('is-open');
+    modal?.setAttribute('aria-hidden', 'true');
+  }
+
+  openBtn?.addEventListener('click', openSearch);
+  closeBtn?.addEventListener('click', closeSearch);
+  backdrop?.addEventListener('click', closeSearch);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('is-open')) {
+      closeSearch();
+    }
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      openSearch();
+    }
+  });
+
+  input?.addEventListener('input', async () => {
+    const query = input.value.trim().toLowerCase();
+    if (!resultsContainer) return;
+
+    if (query.length < 2) {
+      resultsContainer.innerHTML = '<p class="search-modal__hint">Escribe al menos 2 letras para buscar en el archivo de Punto Cuenca.</p>';
+      return;
+    }
+
+    const list = (await loadSearchIndex()) || [];
+    const matches = list.filter((item) =>
+      item.title.toLowerCase().includes(query) ||
+      item.subtitle.toLowerCase().includes(query) ||
+      item.category.toLowerCase().includes(query) ||
+      item.author.toLowerCase().includes(query)
+    );
+
+    if (matches.length === 0) {
+      resultsContainer.innerHTML = `<p class="search-modal__hint">No se encontraron notas para "<strong>${query}</strong>".</p>`;
+      return;
+    }
+
+    resultsContainer.innerHTML = matches
+      .slice(0, 8)
+      .map(
+        (item) => `
+        <a href="/noticias/${item.slug}" class="search-result-item">
+          <span class="search-result-item__cat">${item.category === 'Capital' ? 'Cuenca' : item.category}</span>
+          <h4 class="search-result-item__title">${item.title}</h4>
+          <p class="search-result-item__sub">${item.subtitle}</p>
+        </a>
+      `
+      )
+      .join('');
+  });
+</script>
+
+<style>
+  .site-header {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-rule-medium);
+  }
+
+  .topbar {
+    background-color: var(--color-brand-blue-dark);
+    color: #F0F4F8;
+    font-size: 0.76rem;
+    padding: 0.45rem 0;
+  }
+
+  .topbar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .topbar__left,
+  .topbar__right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background-color: var(--color-brand-red);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.66rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+  }
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    animation: pulse 1.6s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .topbar__date {
+    text-transform: capitalize;
+    color: #D9E2EC;
+    font-weight: 500;
+  }
+
+  .topbar__edition {
+    display: none;
+    color: #BCCCDC;
+  }
+
+  .topbar__subscribe {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    font-weight: 700;
+    padding: 0.2rem 0.65rem;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .topbar__subscribe:hover {
+    background: var(--color-brand-red);
+  }
+
+  .masthead {
+    padding: 1.35rem 0 1.15rem;
+    border-bottom: 3px double var(--color-rule-heavy);
+    background: linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 100%);
+  }
+
+  .masthead__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-items: center;
+    gap: 1rem;
+  }
+
+  .masthead__meta {
+    display: none;
+  }
+
+  .masthead__tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-brand-red);
+    margin-bottom: 0.25rem;
+  }
+
+  .masthead__motto {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--color-ink-secondary);
+    max-width: 240px;
+    line-height: 1.35;
+  }
+
+  .masthead__logo-link {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+
+  .masthead__logo-link:hover {
+    transform: translateY(-1px);
+  }
+
+  .masthead__logo {
+    width: auto;
+    height: 115px;
+    object-fit: contain;
+  }
+
+  .weather-pill {
+    text-align: right;
+    border-right: 3px solid var(--color-brand-blue);
+    padding-right: 0.75rem;
+  }
+
+  .weather-pill__label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-brand-blue);
+  }
+
+  .weather-pill__value {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    color: var(--color-ink-muted);
+  }
+
+  .nav-bar {
+    background: var(--color-surface);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .nav-bar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .nav-list {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.25rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0.35rem 0;
+  }
+
+  .nav-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-link {
+    display: inline-block;
+    padding: 0.5rem 0.95rem;
+    font-size: 0.83rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink);
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .nav-link:hover {
+    color: var(--color-brand-red);
+    background-color: rgba(27, 59, 111, 0.05);
+  }
+
+  .nav-link--active {
+    color: #fff;
+    background-color: var(--color-brand-blue);
+  }
+
+  .nav-link--active:hover {
+    color: #fff;
+    background-color: var(--color-brand-blue-dark);
+  }
+
+  .search-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--color-paper);
+    border: 1px solid var(--color-rule-medium);
+    color: var(--color-ink-secondary);
+    padding: 0.42rem 0.8rem;
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+
+  .search-trigger:hover {
+    border-color: var(--color-brand-blue);
+    color: var(--color-brand-blue);
+  }
+
+  /* Search Modal */
+  .search-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 4rem 1rem 1rem;
+  }
+
+  .search-modal.is-open {
+    display: flex;
+  }
+
+  .search-modal__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 22, 34, 0.65);
+    backdrop-filter: blur(3px);
+  }
+
+  .search-modal__dialog {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 640px;
+    background: var(--color-surface);
+    border-radius: 6px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    border-top: 4px solid var(--color-brand-blue);
+    overflow: hidden;
+  }
+
+  .search-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--color-rule-light);
+    gap: 0.75rem;
+  }
+
+  .search-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex: 1;
+    color: var(--color-brand-blue);
+  }
+
+  .search-input-wrap input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--color-ink);
+    background: transparent;
+  }
+
+  .search-modal__close {
+    background: var(--color-paper);
+    border: 1px solid var(--color-rule-medium);
+    border-radius: 3px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--color-ink-muted);
+    cursor: pointer;
+  }
+
+  .search-modal__results {
+    max-height: 65vh;
+    overflow-y: auto;
+    padding: 0.75rem 1.25rem 1.25rem;
+  }
+
+  .search-modal__hint {
+    font-size: 0.88rem;
+    color: var(--color-ink-muted);
+    padding: 1rem 0;
+    text-align: center;
+  }
+
+  :global(.search-result-item) {
+    display: block;
+    padding: 0.85rem 0.75rem;
+    border-bottom: 1px solid var(--color-rule-light);
+    border-radius: 4px;
+    transition: background 0.15s ease;
+  }
+
+  :global(.search-result-item:hover) {
+    background: var(--color-paper);
+  }
+
+  :global(.search-result-item__cat) {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-brand-red);
+  }
+
+  :global(.search-result-item__title) {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    color: var(--color-ink);
+    margin: 0.15rem 0 0.25rem;
+  }
+
+  :global(.search-result-item__sub) {
+    font-size: 0.82rem;
+    color: var(--color-ink-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .topbar__edition {
+      display: inline;
+    }
+
+    .masthead__inner {
+      grid-template-columns: 1fr auto 1fr;
+    }
+
+    .masthead__meta {
+      display: block;
+    }
+
+    .masthead__meta--left {
+      justify-self: start;
+    }
+
+    .masthead__meta--right {
+      justify-self: end;
+    }
+
+    .masthead__logo {
+      height: 142px;
+    }
+  }
+</style>

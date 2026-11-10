@@ -1,0 +1,227 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer" id="newsletter">
+  <div class="container">
+    <!-- Banner de Suscripción -->
+    <div class="newsletter-box">
+      <div class="newsletter-box__content">
+        <span class="kicker">Boletín Editorial</span>
+        <h2 class="newsletter-box__title">El Resumen de Punto Cuenca en tu correo</h2>
+        <p class="newsletter-box__desc">
+          Recibe cada mañana las 5 noticias clave de Cuenca, el Azuay y el Austro ecuatoriano con datos verificados y contexto periodístico.
+        </p>
+      </div>
+      <form
+        class="newsletter-box__form"
+        name="boletin-punto-cuenca"
+        method="POST"
+        data-netlify="true"
+        id="newsletter-form"
+      >
+        <input type="hidden" name="form-name" value="boletin-punto-cuenca" />
+        <input
+          type="email"
+          name="email"
+          placeholder="tu@correo.com"
+          required
+          aria-label="Correo electrónico"
+          class="newsletter-box__input"
+        />
+        <button type="submit" class="newsletter-box__btn">Suscribirme</button>
+      </form>
+    </div>
+
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img
+          src="/logo-punto-cuenca.png"
+          alt="Punto Cuenca"
+          class="footer-brand__logo"
+          width="220"
+          height="81"
+        />
+        <p class="footer-brand__text">
+          Periodismo independiente enfocado en las decisiones públicas, el desarrollo productivo, el patrimonio y la vida ciudadana de Cuenca y el Azuay.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-col__title">Secciones</h3>
+        <ul class="footer-col__list">
+          <li><a href="/">Portada General</a></li>
+          <li><a href="/categoria/capital">Cuenca</a></li>
+          <li><a href="/categoria/politica">Política</a></li>
+          <li><a href="/categoria/economia">Economía</a></li>
+          <li><a href="/categoria/sociedad">Sociedad</a></li>
+          <li><a href="/categoria/opinion">Opinión</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-col__title">Redacción</h3>
+        <ul class="footer-col__list">
+          <li><a href="mailto:contacto@puntocuenca.net">Mesa de Redacción</a></li>
+          <li><a href="mailto:denuncias@puntocuenca.net">Denuncia Ciudadana</a></li>
+          <li><a href="/rss.xml">Canal RSS</a></li>
+          <li><a href="/admin">Acceso Editorial (CMS)</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© {year} Punto Cuenca. Todos los derechos reservados.</p>
+      <p>Hecho con rigor periodístico en Cuenca, Patrimonio Cultural de la Humanidad.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 4rem;
+    background-color: #0E1726;
+    color: #D9E2EC;
+    padding: 3.5rem 0 2rem;
+    border-top: 4px solid var(--color-brand-red);
+  }
+
+  .newsletter-box {
+    background: linear-gradient(135deg, #1B3B6F 0%, #102547 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .newsletter-box .kicker {
+    color: #FFD166;
+  }
+
+  .newsletter-box .kicker::before {
+    background-color: #FFD166;
+  }
+
+  .newsletter-box__title {
+    font-family: var(--font-serif);
+    font-size: 1.65rem;
+    color: #FFFFFF;
+    margin: 0.35rem 0 0.5rem;
+  }
+
+  .newsletter-box__desc {
+    font-size: 0.92rem;
+    color: #CBD5E1;
+    max-width: 540px;
+  }
+
+  .newsletter-box__form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .newsletter-box__input {
+    flex: 1 1 220px;
+    padding: 0.8rem 1rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--color-ink);
+    font-size: 0.9rem;
+  }
+
+  .newsletter-box__btn {
+    padding: 0.8rem 1.4rem;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--color-brand-red);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .newsletter-box__btn:hover {
+    background-color: #96151B;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .footer-brand__logo {
+    background: #FFFFFF;
+    padding: 0.65rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    height: 96px;
+    width: auto;
+  }
+
+  .footer-brand__text {
+    font-size: 0.88rem;
+    color: #9FB3C8;
+    max-width: 360px;
+    line-height: 1.6;
+  }
+
+  .footer-col__title {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #FFFFFF;
+    margin-bottom: 0.85rem;
+  }
+
+  .footer-col__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.88rem;
+    color: #9FB3C8;
+  }
+
+  .footer-col__list a:hover {
+    color: #FFFFFF;
+  }
+
+  .footer-bottom {
+    padding-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    color: #829AB1;
+  }
+
+  @media (min-width: 768px) {
+    .newsletter-box {
+      grid-template-columns: 1.3fr 1fr;
+      padding: 2.25rem 2.5rem;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1.6fr 1fr 1fr;
+    }
+
+    .footer-bottom {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+</style>

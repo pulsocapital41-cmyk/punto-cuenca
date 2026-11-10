@@ -1,0 +1,141 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  article?: boolean;
+  publishedTime?: string;
+  author?: string;
+  category?: string;
+}
+
+const {
+  title = 'Punto Cuenca — Periodismo con identidad desde Cuenca y el Azuay',
+  description = 'Punto Cuenca es el diario digital de referencia de Cuenca, Azuay y el Austro ecuatoriano. Noticias de actualidad, política, economía, sociedad, cultura y opinión.',
+  image = '/logo-punto-cuenca.png',
+  article = false,
+  publishedTime,
+  author = 'Redacción Punto Cuenca',
+  category,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://puntocuenca.net');
+const socialImageURL = image.startsWith('http')
+  ? image
+  : new URL(image, Astro.site || 'https://puntocuenca.net').toString();
+
+const fullTitle = title.includes('Punto Cuenca') ? title : `${title} | Punto Cuenca`;
+
+const jsonLd = article
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'NewsArticle',
+      headline: title,
+      description: description,
+      image: [socialImageURL],
+      datePublished: publishedTime,
+      dateModified: publishedTime,
+      articleSection: category,
+      author: [
+        {
+          '@type': 'Person',
+          name: author,
+        },
+      ],
+      publisher: {
+        '@type': 'NewsMediaOrganization',
+        name: 'Punto Cuenca',
+        logo: {
+          '@type': 'ImageObject',
+          url: new URL('/logo-punto-cuenca.png', Astro.site || 'https://puntocuenca.net').toString(),
+        },
+      },
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': canonicalURL.toString(),
+      },
+    }
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'NewsMediaOrganization',
+      name: 'Punto Cuenca',
+      url: (Astro.site || 'https://puntocuenca.net').toString(),
+      logo: new URL('/logo-punto-cuenca.png', Astro.site || 'https://puntocuenca.net').toString(),
+      description: description,
+    };
+---
+
+<!doctype html>
+<html lang="es-EC">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" type="application/rss+xml" title="Punto Cuenca — RSS" href="/rss.xml" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#1B3B6F" />
+
+    <!-- Primary Meta Tags -->
+    <title>{fullTitle}</title>
+    <meta name="title" content={fullTitle} />
+    <meta name="description" content={description} />
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:site_name" content="Punto Cuenca" />
+    <meta property="og:locale" content="es_EC" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImageURL} />
+    {article && publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {article && category && <meta property="article:section" content={category} />}
+
+    <!-- Twitter / X -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={fullTitle} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={socialImageURL} />
+
+    <!-- Structured Data (Google News / Rich Results) -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Netlify Identity Widget -->
+    <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+
+    <script is:inline>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on('init', (user) => {
+          if (!user) {
+            window.netlifyIdentity.on('login', () => {
+              document.location.href = '/admin/';
+            });
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
