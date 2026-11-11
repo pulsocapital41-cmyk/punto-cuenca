@@ -1,34 +1,60 @@
 ---
-import { AI_NEWSROOM_SCRIPT } from '../utils/aiNewsroom';
+// Redirección a la Central Editorial Unificada
 ---
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="noindex" />
-    <title>Sala de Redacción | Punto Cuenca</title>
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
-    <style is:global>
-      /* Ocultar widgets y badges innecesarios de Netlify */
-      #nl-badge-frame,
-      #nl-hud-frame,
-      iframe[title="Powered by Netlify"],
-      iframe[title="Netlify"],
-      iframe[title*="Netlify"] {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        width: 0 !important;
-        height: 0 !important;
-        pointer-events: none !important;
+    <meta http-equiv="refresh" content="0; url=https://central.neuronamedios.com" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Redirigiendo a Sala de Redacción Central...</title>
+    <script>
+      window.location.replace("https://central.neuronamedios.com");
+    </script>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: #071524;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        text-align: center;
+        padding: 20px;
+      }
+      .loader {
+        width: 48px;
+        height: 48px;
+        border: 4px solid rgba(255, 255, 255, 0.1);
+        border-top-color: #3b82f6;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-bottom: 20px;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      h2 {
+        font-size: 1.3rem;
+        margin-bottom: 8px;
+      }
+      p {
+        color: #94a3b8;
+        font-size: 0.95rem;
+        margin-top: 0;
+      }
+      a {
+        color: #38bdf8;
+        text-decoration: underline;
       }
     </style>
-    <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
   <body>
-    <script is:inline src="https://unpkg.com/decap-cms@^3.1.2/dist/decap-cms.js"></script>
-    <script is:inline set:html={AI_NEWSROOM_SCRIPT} />
+    <div class="loader"></div>
+    <h2>Redirigiendo a la Central Editorial</h2>
+    <p>Si no te redirige automáticamente, <a href="https://central.neuronamedios.com">haz clic aquí para entrar</a>.</p>
   </body>
 </html>

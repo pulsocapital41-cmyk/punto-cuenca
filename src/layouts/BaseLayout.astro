@@ -116,8 +116,6 @@ const jsonLd = article
       rel="stylesheet"
     />
 
-    <!-- Netlify Identity Widget -->
-    <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
   <body>
     <Header />
@@ -125,21 +123,5 @@ const jsonLd = article
       <slot />
     </main>
     <Footer />
-
-    <script is:inline>
-      // Redirige automáticamente al panel /admin cuando un editor acepta su invitación por correo
-      if (window.location.hash && (window.location.hash.includes('invite_token=') || window.location.hash.includes('recovery_token='))) {
-        window.location.href = '/admin/' + window.location.hash;
-      }
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('init', (user) => {
-          if (!user) {
-            window.netlifyIdentity.on('login', () => {
-              document.location.href = '/admin/';
-            });
-          }
-        });
-      }
-    </script>
   </body>
 </html>
