@@ -8,7 +8,7 @@ export async function GET() {
     .map((item) => ({
       slug: item.id,
       title: item.data.title,
-      subtitle: item.data.subtitle,
+      subtitle: item.data.subtitle || item.data.excerpt || '',
       category: item.data.category,
       author: item.data.author,
       pubDate: item.data.pubDate.toLocaleDateString('es-EC', {

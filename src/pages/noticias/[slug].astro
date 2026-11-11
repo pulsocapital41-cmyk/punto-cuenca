@@ -37,12 +37,13 @@ const displayCategory = article.data.category === 'Capital' ? 'Cuenca' : article
 const articleUrl = new URL(Astro.url.pathname, Astro.site || 'https://puntocuenca.net').toString();
 const encodedTitle = encodeURIComponent(article.data.title);
 const encodedUrl = encodeURIComponent(articleUrl);
+const summaryText = article.data.subtitle || article.data.excerpt || '';
 const heroImage = optimizeImage(article.data.image, 1200);
 ---
 
 <BaseLayout
   title={article.data.title}
-  description={article.data.subtitle}
+  description={summaryText}
   image={article.data.image}
   article={true}
   publishedTime={article.data.pubDate.toISOString()}
@@ -59,7 +60,7 @@ const heroImage = optimizeImage(article.data.image, 1200);
       </div>
 
       <h1 class="article-header__title">{article.data.title}</h1>
-      <p class="article-header__subtitle">{article.data.subtitle}</p>
+      <p class="article-header__subtitle">{summaryText}</p>
 
       <div class="article-header__byline">
         <div>

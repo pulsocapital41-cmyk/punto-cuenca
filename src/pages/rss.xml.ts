@@ -12,7 +12,7 @@ export async function GET() {
       <title><![CDATA[${post.data.title}]]></title>
       <link>https://puntocuenca.net/noticias/${post.id}/</link>
       <guid isPermaLink="true">https://puntocuenca.net/noticias/${post.id}/</guid>
-      <description><![CDATA[${post.data.subtitle}]]></description>
+      <description><![CDATA[${post.data.subtitle || post.data.excerpt || ''}]]></description>
       <category><![CDATA[${post.data.category === 'Capital' ? 'Cuenca' : post.data.category}]]></category>
       <pubDate>${post.data.pubDate.toUTCString()}</pubDate>
     </item>`

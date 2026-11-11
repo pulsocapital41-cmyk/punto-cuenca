@@ -8,7 +8,8 @@ interface Props {
 }
 
 const { article, featured = false } = Astro.props;
-const { title, subtitle, category, author, pubDate, image, readTime } = article.data;
+const { title, subtitle, excerpt, category, author, pubDate, image, readTime } = article.data;
+const summaryText = subtitle || excerpt || '';
 
 const formattedDate = pubDate.toLocaleDateString('es-EC', {
   day: 'numeric',
@@ -46,7 +47,7 @@ const optimizedImg = optimizeImage(image, featured ? 1000 : 720);
     </h2>
   </header>
 
-  <p class="grid-card__summary">{subtitle}</p>
+  <p class="grid-card__summary">{summaryText}</p>
 
   <footer class="grid-card__footer">
     <span class="grid-card__author">{author}</span>
